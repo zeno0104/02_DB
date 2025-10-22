@@ -9,7 +9,7 @@
 
 -- 서브쿼리 예시 1.
 
--- 부서코드가 노옹철 사원과 같은 소속의 직원의 이름, 부서코드 조회
+-- 1번. 부서코드가 노옹철 사원과 같은 소속의 직원의 이름, 부서코드 조회
 
 -- 1) 노옹철의 부서코드 조회 (서브쿼리)
 SELECT DEPT_CODE
@@ -29,17 +29,12 @@ WHERE DEPT_CODE = (SELECT DEPT_CODE
 				   FROM EMPLOYEE
 				   WHERE EMP_NAME = '노옹철');
 -- MY_SOLUTION
-SELECT EMP_NAME, DEPT_CODE
-FROM EMPLOYEE
-WHERE DEPT_CODE IN (
-	SELECT DEPT_CODE
-	FROM EMPLOYEE
-	WHERE EMP_NAME = '노옹철'
-);
+
+
 
 -- 서브쿼리 예시 2.
 
--- 전 직원의 평균 급여보다 많은 급여를 받고 있는 직원의
+-- 2번. 전 직원의 평균 급여보다 많은 급여를 받고 있는 직원의
 -- 사번, 이름, 직급코드, 급여 조회
 
 -- 1) 전 직원의 평균 급여 조회하기 (서브쿼리)
@@ -95,10 +90,10 @@ WHERE SALARY >= (
 --    단일행 서브쿼리 앞에는 비교 연산자 사용
 --    < , >, <= , >= , = , != / <> / ^=			
 
--- 전 직원의 급여 평균보다 초과하여 급여를 받는 직원의
+-- 3번. 전 직원의 급여 평균보다 초과하여 급여를 받는 직원의
 -- 이름, 직급명, 부서명, 급여를 직급 순으로 정렬하여 조회
 
--- 서브쿼리
+-- 서브쿼리 ✔✔
 SELECT CEIL(AVG(SALARY)) FROM EMPLOYEE;
 
 SELECT EMP_NAME, JOB_NAME, DEPT_TITLE, SALARY
@@ -128,7 +123,7 @@ ORDER BY J.JOB_CODE;
 -- FROM, JOIN으로 인해 테이블상 존재하는 컬럼이면
 -- ORDER BY 절 사용 가능!
 
--- 가장 적은 급여를 받는 직원의 
+-- 4번. 가장 적은 급여를 받는 직원의 
 -- 사번, 이름, 직급명, 부서코드, 급여, 입사일 조회
 SELECT * FROM EMPLOYEE;
 
@@ -150,7 +145,7 @@ WHERE SALARY = (
 	FROM EMPLOYEE
 ); 
 
--- 노옹철 사원의 급여보다 초과하여 받는 직원의
+-- 5번. 노옹철 사원의 급여보다 초과하여 받는 직원의
 -- 사번, 이름, 부서명, 직급명, 급여 조회
 
 SELECT SALARY FROM EMPLOYEE
@@ -179,7 +174,7 @@ WHERE SALARY > (
 	WHERE EMP_NAME = '노옹철'
 );
 
--- 부서별(부서가 없는 사람 포함) 급여의 합계 중 
+-- 6번. 부서별(부서가 없는 사람 포함) 급여의 합계 중 
 -- 가장 큰 부서의 부서명, 급여 합계를 조회
 
 -- 1) 부서별 급여 합 중 가장 큰 값 조회(서브)
@@ -227,7 +222,7 @@ HAVING SUM(SALARY) = (
  * 
  * */					
 
--- 부서별 최고 급여를 받는 직원의
+-- 7번. 부서별 최고 급여를 받는 직원의
 -- 이름, 직급, 부서, 급여를
 -- 부서 순으로 정렬하여 조회
 
@@ -245,7 +240,7 @@ WHERE SALARY IN  (
 )
 ORDER BY DEPT_CODE;
 
--- 사수에 해당하는 직원에 대해 조회
+-- 8번. 사수에 해당하는 직원에 대해 조회
 -- 사번, 이름, 부서명, 직급명, 구분(사수/사원)
 
 -- * 사수 == MANAGER_ID 컬럼에 작성된 사번
@@ -327,7 +322,7 @@ FROM EMPLOYEE E
 JOIN JOB J ON E.JOB_CODE = J.JOB_CODE
 LEFT JOIN DEPARTMENT D ON E.DEPT_CODE = D.DEPT_ID;
 
--- 대리 직급의 직원들 중에서
+-- 9번. 대리 직급의 직원들 중에서
 -- 과장 직급의 최소 급여보다
 -- 많이 받는 직원의 사번, 이름, 직급명, 급여 조회 ✔✔
 
@@ -371,12 +366,40 @@ AND SALARY > (
 	WHERE JOB_NAME = '과장'
 )
 
--- 차장 직급의 급여 중 가장 큰 값보다 많이 받는 과장 직급의 직원
+-- 10번. 차장 직급의 급여 중 가장 큰 값보다 많이 받는 과장 직급의 직원
+-- 사번, 이름, 직급, 급여 조회
 
+-- > ALL : 가장 큰 값 보다 크냐? 
+
+-- 서브쿼리 (차장 직급의 급여 조회)
 SELECT SALARY
 FROM EMPLOYEE
 JOIN JOB USING(JOB_CODE)
 WHERE JOB_NAME = '차장';
+
+-- 메인쿼리 + 서브쿼리
+SELECT EMP_ID, EMP_NAME, JOB_NAME, SALARY
+FROM EMPLOYEE 
+JOIN JOB USING(JOB_CODE)
+WHERE JOB_NAME = '과장'
+AND SALARY > ALL (
+	SELECT SALARY
+	FROM EMPLOYEE
+	JOIN JOB USING(JOB_CODE)
+	WHERE JOB_NAME = '차장'
+);
+
+
+SELECT EMP_ID, EMP_NAME, JOB_NAME, SALARY
+FROM EMPLOYEE
+JOIN JOB USING(JOB_CODE)
+WHERE JOB_NAME = '과장' 
+AND SALARY > ALL(
+	SELECT SALARY
+	FROM EMPLOYEE
+	JOIN JOB USING(JOB_CODE)
+	WHERE JOB_NAME = '차장'
+)
 
 
 
