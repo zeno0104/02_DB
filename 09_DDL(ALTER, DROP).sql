@@ -45,6 +45,8 @@ MODIFY DEPT_TITLE NOT NULL; -- DEPT_TITLE 컬럼에 NULL 비허용
 ALTER TABLE DEPT_COPY 
 MODIFY DEPT_TITLE NULL; -- DEPT_TITLE 컬럼에 NULL 허용
 
+------------------------------------------------------
+
 
 
 
