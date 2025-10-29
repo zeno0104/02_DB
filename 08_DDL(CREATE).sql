@@ -331,6 +331,7 @@ INSERT INTO USER_USED_PK VALUES
 
 ---------------------------------------------------
 
+-- ✔️
 -- PRIMARY KEY 복합키 (테이블 레벨만 가능)
 CREATE TABLE USER_USED_PK2 (
 	USER_NO NUMBER, 
@@ -446,7 +447,7 @@ INSERT INTO USER_USED_FK VALUES
 --> 외래키 제약조건에 위배되어 오류 발생(부모의 GRADE_CODE에는 50이 없음)
 
 ----------------------------------------------------------------
-
+-- ✔️
 -- * FOREIGN KEY 삭제 옵션
 -- 부모 테이블의 데이터 삭제 시 자식 테이블의 데이터를
 -- 어떤 식으로 처리할지에 대한 내용을 설정할 수 있다.
@@ -515,7 +516,7 @@ DELETE FROM USER_GRADE2
 WHERE GRADE_CODE = 10;
 -- 10을 사용하고 있던 자식값이 NULL이 됨을 확인
 
--- 3) ON DELETE CASCASE : 부모키 삭제시 자식키도 함께 삭제됨
+-- 3) ON DELETE CASCADE : 부모키 삭제시 자식키도 함께 삭제됨
 -- 부모키 삭제 시 값을 사용하고 있던 자식 테이블의 행이 삭제됨
 SELECT * FROM USER_GRADE2;
 SELECT * FROM USER_USED_FK2;
