@@ -34,7 +34,7 @@
 
 
 /*
- * USER - 계정 (사용자)
+ * USER - 계정 (사용자) -> 사용자를 나타내는 객체
  * 
  * * 관리자 계정 : 데이터베이스의 생성과 관리를 담당하는 계정.
  * 					모든 권한과 책임을 가지는 계정.
@@ -56,10 +56,13 @@ ALTER SESSION SET "_ORACLE_SCRIPT" = TRUE;
 -- 새로운 사용자 생성 작성법
 -- CREATE USER 사용자명 IDENTIFIED BY 비밀번호;
 CREATE USER ajh_sample IDENTIFIED BY sample1234;
+-- ⭐ 해당 과정은 SYS에서 진행이 되어야 한다!!! 
 
--- 2. 새 연결(접속) 추가
+-- 2. 새 연결(접속) 추가 -> 새로운 Connection을 만들겠다는 의미!
 -- ORA-01045: 사용자 AJH_SAMPLE는 CREATE SESSION 권한을 가지고있지 않음; 로그온이 거절되었습니다
---> 접속 권한
+--> 접속 권한, 로그인 할 수 있도록
+--> jh_sample은 계정만 생성된 것이지 아무런 권한없는 빈 껍데기다!
+--> 로그온 권한을 받아야 함
 
 -- 3. 접속 권한 부여 (sys -> 사용자계정)
 -- [권한 부여 작성법]
@@ -85,6 +88,12 @@ USERS QUOTA UNLIMITED ON SYSTEM;
 -- SYSTEM 테이블스페이스를 사용자 ajh_sample의 
 -- 저장소로 무제한 사용 가능하게끔 하는 명령
 
+-- 테이블을 저장할 수 있는 공간 = 테이블 스페이스
+-- 사용자가 새로 만드는 객체(테이블, 인덱스 등) 저장할 수 있는
+-- 기본 공간을 SYSTEM 테이블 스페스로 지정하겠다는 것
+-- 그리고 무제한으로 주겠다는 의미
+
+
 -- 7. (sample) 테이블 다시 생성
 CREATE TABLE TB_TEST(
 	PK_COL NUMBER PRIMARY KEY,
@@ -93,6 +102,10 @@ CREATE TABLE TB_TEST(
 
 SELECT * FROM tb_test;
 ---------------------------------------------
+
+-- 권한 주는 것을 까먹을 수도 있기 때문에
+-- 아래와 같은 개념들이 만들어 진 것
+-- CREATE SESSION, CREATE TABLE 대신에 사용 
 
 -- ROLE (역할) : 권한 묶음
 --> 묶어둔 권한을 특정 계정에 부여
